@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateProductRequest;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use Ramsey\Uuid\Type\Integer;
 
 class ProductController extends Controller
 {
@@ -19,10 +20,11 @@ class ProductController extends Controller
     {
         $this->product = $product;
     }
-     
+
     public function index()
     {
-        return $this->product->all();
+        $product = $this->product->all();
+        return response()->json($product, 200);
     }
 
     /**
@@ -32,31 +34,35 @@ class ProductController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateProductRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUpdateProductRequest $request)
     {
         $dataProduct = $request->all();
 
-        return $this->product->create($dataProduct);
+        $product = $this->product->create($dataProduct);
+
+        return response()->json($product, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  Integer
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        return $product;
+        if (!$product = $this->product->find($id)) {
+            return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
+        }
+        return response()->json($product, 200);
     }
 
     /**
@@ -73,29 +79,37 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
+     * @param  \App\Http\Requests\StoreUpdateProductRequest  $request
+     * @param  Integer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(StoreUpdateProductRequest $request, $id)
     {
+        if (!$product = $this->product->find($id)) {
+            return response()->json(['erro' => 'Não foi possível atualizar. Recurso solicitado não existe'], 404);
+        }
+
         $dataProduct = $request->all();
-      
+
         $product->update($dataProduct);
 
-        return $product;
+        return response()->json($product, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param  Integer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
+        if (!$product = $this->product->find($id)) {
+            return response()->json(['erro' => 'Não foi possível deletar. Recurso solicitado não existe'], 404);
+        }
+
         $product->delete();
 
-        return ['msg' => 'Deletado com sucesso!'];
+        return response()->json(['msg' => 'Deletado com sucesso!'], 200);
     }
 }
