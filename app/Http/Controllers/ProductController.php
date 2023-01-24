@@ -12,9 +12,17 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    private $product;
+
+    public function __construct(Product $product)
+    {
+        $this->product = $product;
+    }
+     
     public function index()
     {
-        //
+        return $this->product->all();
     }
 
     /**
@@ -24,7 +32,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -35,7 +43,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dataProduct = $request->all();
+
+        return $this->product->create($dataProduct);
     }
 
     /**
@@ -46,7 +56,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return $product;
     }
 
     /**
@@ -69,7 +79,11 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $dataProduct = $request->all();
+      
+        $product->update($dataProduct);
+
+        return $product;
     }
 
     /**
@@ -80,6 +94,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+
+        return ['msg' => 'Deletado com sucesso!'];
     }
 }
