@@ -24,7 +24,7 @@ class ProductController extends Controller
 
     public function index()
     {
-        $product = $this->product->all();
+        $product = $this->product->orderByDesc('created_at')->get();
         return response()->json($product, 200);
     }
 
