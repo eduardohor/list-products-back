@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateProductRequest;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Type\Integer;
 
 class ProductController extends Controller
@@ -45,6 +46,12 @@ class ProductController extends Controller
     public function store(StoreUpdateProductRequest $request)
     {
         $dataProduct = $request->all();
+
+        $image = $dataProduct['image'];
+
+        $path = $image->store('products', 'public');
+
+        $dataProduct['image'] = $path;
 
         $product = $this->product->create($dataProduct);
 
@@ -91,6 +98,16 @@ class ProductController extends Controller
 
         $dataProduct = $request->all();
 
+        if ($request->hasFile('image')) {
+            Storage::disk('public')->delete($product->image);
+            $image = $dataProduct['image'];
+
+            $path = $image->store('products', 'public');
+
+            $dataProduct['image'] = $path;
+        }
+
+
         $product->update($dataProduct);
 
         return response()->json($product, 200);
@@ -108,6 +125,7 @@ class ProductController extends Controller
             return response()->json(['erro' => 'Não foi possível deletar. Recurso solicitado não existe'], 404);
         }
 
+        Storage::disk('public')->delete($product->image);
         $product->delete();
 
         return response()->json(['msg' => 'Deletado com sucesso!'], 200);

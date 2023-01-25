@@ -23,20 +23,22 @@ class StoreUpdateProductRequest extends FormRequest
      */
     public function rules()
     {
-        if (!$this->method('POST') ) {
-            $rules = [
-                'name' => 'required|unique:products',
-                'price' => 'required',
-                'image' => 'required',
-            ];
-        }
         $rules = [
-            'name' => 'nullable|unique:products',
-            'price' => 'nullable',
-            'image' => 'nullable',
+            'name' => ['required', 'unique:products'],
+            'price' => ['required'],
+            'image' => ['required', 'image'],
+            'description' => ['required', 'string', 'min:10', 'max:256'],
+
         ];
 
-        
+        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $rules = [
+                'name' => ['nullable', 'unique:products'],
+                'price' => ['nullable'],
+                'image' => ['nullable', 'image'],
+                'description' => ['nullable', 'string', 'min:10', 'max:256'],
+            ];
+        }
         return $rules;
     }
 }
