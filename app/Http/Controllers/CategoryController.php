@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Imports\CategoriesImport;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CategoryController extends Controller
@@ -15,7 +17,7 @@ class CategoryController extends Controller
     {
         $this->category = $category;
     }
-    public function categoriesUsers(Request $request)
+    public function upload(Request $request)
     {
         Excel::import(new CategoriesImport, $request->file);
 
@@ -25,5 +27,14 @@ class CategoryController extends Controller
             'msg' => 'Arquivo importado com sucesso!',
             'data' => $category
         ], 201);
+    }
+
+    public function download()
+    {
+
+       $file = Storage::path('categories.csv');
+
+       return response()->file($file);
+
     }
 }

@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::resource('products', ProductController::class);
 Route::post('/convert', [StringController::class, 'convertString']);
-Route::post('/upload', [CategoryController::class, 'categoriesUsers']);
+Route::post('/upload', [CategoryController::class, 'upload']);
+Route::get('/download', [CategoryController::class, 'download']);
 
 

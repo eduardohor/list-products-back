@@ -3,7 +3,6 @@
 namespace App\Imports;
 
 use App\Models\Category;
-use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class CategoriesImport implements ToModel
