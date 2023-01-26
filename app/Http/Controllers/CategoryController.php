@@ -32,9 +32,11 @@ class CategoryController extends Controller
     public function download()
     {
 
-       $file = Storage::path('categories.csv');
+       $file = Storage::get('categories.csv');
 
-       return response()->file($file);
+       $fileData = mb_convert_encoding($file, "UTF-8" , "ISO-8859-1");
+
+       return $fileData;
 
     }
 }
