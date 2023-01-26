@@ -40,6 +40,12 @@ php artisan key:generate
 php artisan migrate
 ```
 
+- Criar link simbólico para upload e visualização de imagens 
+
+```sh
+php artisan storage:link
+```
+
 - Subir o servidor
 
 ```sh
